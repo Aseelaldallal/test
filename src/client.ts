@@ -15,10 +15,13 @@ async function run() {
   const startDate = new Date('2015-01-01');
   const endDate = new Date('2024-03-01');
   const monthChunks = splitDateRangeIntoMonthChunks(startDate, endDate);
-  console.log('Month Chunks:', monthChunks);
+
+  // simulating a failure
+  const chunkToFailId = monthChunks[2].id;
+  console.log('This Chunk will fail -- If failure enabled', chunkToFailId);
 
   const handle = await client.start(importData, {
-    args: [monthChunks],
+    args: [monthChunks, chunkToFailId],
     taskQueue: taskQueueName,
     workflowId: 'data-import-bussiness-14141',
   });

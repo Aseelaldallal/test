@@ -8,7 +8,7 @@ const { fetchData, saveRawData, transformData, saveTransformedData } = proxyActi
     initialInterval: '1 second',
     maximumInterval: '1 minute',
     backoffCoefficient: 2,
-    maximumAttempts: 15,
+    maximumAttempts: 5,
   },
   startToCloseTimeout: '5 minutes',
 });
@@ -16,10 +16,11 @@ const { fetchData, saveRawData, transformData, saveTransformedData } = proxyActi
 export async function processChunk(
   id: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
+  chunkToFailId: string
 ): Promise<void> {
   const rawData = await fetchData(id, startDate, endDate);
-  const savedData = await saveRawData(id, rawData);
+  const savedData = await saveRawData(id, rawData, chunkToFailId);
   const transformedData = await transformData(id, savedData);
   await saveTransformedData(id, transformedData);
 }

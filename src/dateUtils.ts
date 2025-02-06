@@ -17,7 +17,7 @@ export function splitDateRangeIntoMonthChunks(startDate: Date, endDate: Date): C
     const chunkStartDate = new Date(currentStart);
     const chunkEndDate = new Date(currentEnd);
     chunks.push({
-      id: `${chunkStartDate}-${chunkEndDate}`,
+      id: `${chunkStartDate.toISOString().split('T')[0]}-${chunkEndDate.toISOString().split('T')[0]}`,
       chunkStartDate,
       chunkEndDate,
     });
