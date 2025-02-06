@@ -1,29 +1,20 @@
 // @@@SNIPSTART money-transfer-project-template-ts-start-workflow
 import { Connection, WorkflowClient } from '@temporalio/client';
-import { moneyTransfer } from './workflows';
-import type { PaymentDetails } from './shared';
+
 
 import { namespace, taskQueueName } from './shared';
+import { importData } from './workflows';
 
 async function run() {
   const connection = await Connection.connect();
   const client = new WorkflowClient({ connection, namespace });
 
-  const details: PaymentDetails = {
-    amount: 400,
-    sourceAccount: '85-150',
-    targetAccount: '43-812',
-    referenceId: '12345',
-  };
+  console.log('Starting Data import');
 
-  console.log(
-    `Starting transfer from account ${details.sourceAccount} to account ${details.targetAccount} for $${details.amount}`
-  );
-
-  const handle = await client.start(moneyTransfer, {
-    args: [details],
+  const handle = await client.start(importData, {
+    args: [{ startDate: new Date('2015-01-01'), endDate: new Date('2024-03-01') }],
     taskQueue: taskQueueName,
-    workflowId: 'pay-invoice-801',
+    workflowId: 'data-import',
   });
 
   console.log(
@@ -36,4 +27,4 @@ run().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-// @@@SNIPEND
+
