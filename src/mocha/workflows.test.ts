@@ -4,7 +4,7 @@ import { after, before, it } from 'mocha';
 import { Worker } from '@temporalio/worker';
 import assert from 'assert';
 import * as activities from '../activities';
-import { moneyTransfer } from '../workflows';
+import { moneyTransfer } from '../workflows/parentImportWorkflow';
 import type { PaymentDetails } from '../shared';
 
 describe('Money Transfer workflow', () => {
