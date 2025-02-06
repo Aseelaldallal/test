@@ -4,8 +4,7 @@ import { Chunk } from './shared';
 export function splitDateRangeIntoMonthChunks(startDate: Date, endDate: Date): Chunk[] {
   const chunks: Chunk[] = [];
   let currentStart = new Date(startDate);
-  let id = 1;
-  
+
   while (currentStart < endDate) {
     const year = currentStart.getFullYear();
     const month = currentStart.getMonth();
@@ -15,10 +14,12 @@ export function splitDateRangeIntoMonthChunks(startDate: Date, endDate: Date): C
       currentEnd = new Date(endDate);
     }
     
+    const chunkStartDate = new Date(currentStart);
+    const chunkEndDate = new Date(currentEnd);
     chunks.push({
-      id: id++,
-      chunkStartDate: new Date(currentStart),
-      chunkEndDate: new Date(currentEnd),
+      id: `${chunkStartDate}-${chunkEndDate}`,
+      chunkStartDate,
+      chunkEndDate,
     });
     
     currentStart = new Date(currentEnd);

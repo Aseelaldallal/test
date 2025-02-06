@@ -14,7 +14,7 @@ export interface TransformedData {
 }
 
 export interface Chunk {
-  id: number;
+  id: string;
   chunkStartDate: Date;
   chunkEndDate: Date;
 }

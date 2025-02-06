@@ -18,7 +18,7 @@ async function run() {
   console.log('Month Chunks:', monthChunks);
 
   const handle = await client.start(importData, {
-    args: monthChunks,
+    args: [monthChunks],
     taskQueue: taskQueueName,
     workflowId: 'data-import-bussiness-14141',
   });

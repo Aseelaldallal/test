@@ -14,7 +14,7 @@ const { fetchData, saveRawData, transformData, saveTransformedData } = proxyActi
 });
 
 export async function processChunk(
-  id: number,
+  id: string,
   startDate: Date,
   endDate: Date
 ): Promise<void> {
