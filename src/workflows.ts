@@ -21,6 +21,10 @@ export async function importData(importDateSpan: ImportDateSpan): Promise<void> 
 
   const { startDate, endDate } = importDateSpan;
   const dateChunks = splitDateRange(startDate, endDate);
+  // const fetchedRawData = await fetchData(1, startDate, endDate);
+  // const savedRawData = await saveRawData(1, fetchedRawData);
+  // const transformedData = await transformData(1, savedRawData);
+  // await saveTransformedData(1, transformedData);
   
   const tasks = dateChunks.map(({ id, chunkStartDate, chunkEndDate }) =>
     (async () => {
