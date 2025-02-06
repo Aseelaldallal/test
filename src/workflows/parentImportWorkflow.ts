@@ -14,5 +14,10 @@ export async function importData(monthChunks: Chunk[], chunkToFailId: string): P
     })
   );
 
-  await Promise.allSettled(childWorkflowPromises);
+  const results = await Promise.allSettled(childWorkflowPromises);
+  const failures = results.filter(result => result.status === 'rejected');
+  if (failures.length > 0) {
+    console.log('Failures');
+    throw new Error(`One or more data import chunks failed: ${failures.map(f => f.status ).join(', ')}`);
+  }
 }

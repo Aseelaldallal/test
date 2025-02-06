@@ -16,9 +16,9 @@ export const fetchData = async (id: string, startDate: Date, endDate: Date): Pro
 
 export const saveRawData = async (id: string, rawData: Record<string,any>[], chunkToFailId: string): Promise<Record<string,any>[]> => {
   // Save raw data
-  if(id === chunkToFailId) {
-    throw new Error('Failed to save');
-  }
+  // if(id === chunkToFailId) {
+  //   throw new Error('Failed to save');
+  // }
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return rawData;
 }
