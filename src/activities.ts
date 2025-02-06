@@ -1,50 +1,65 @@
-// @@@SNIPSTART money-transfer-project-template-ts-withdraw-activity
-import type { PaymentDetails } from './shared';
-import { BankingService } from './banking-client';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
-export async function withdraw(details: PaymentDetails): Promise<string> {
-  console.log(
-    `Withdrawing $${details.amount} from account ${details.sourceAccount}.\n\n`
-  );
-  const bank1 = new BankingService('bank1.example.com');
-  return await bank1.withdraw(
-    details.sourceAccount,
-    details.amount,
-    details.referenceId
-  );
-}
-// @@@SNIPEND
 
-// @@@SNIPSTART money-transfer-project-template-ts-deposit-activity
-export async function deposit(details: PaymentDetails): Promise<string> {
-  console.log(
-    `Depositing $${details.amount} into account ${details.targetAccount}.\n\n`
-  );
-  const bank2 = new BankingService('bank2.example.com');
-  // Uncomment lines 25-29 and comment lines 30-34 to simulate an unknown failure
-  // return await bank2.depositThatFails(
-  //   details.targetAccount,
-  //   details.amount,
-  //   details.referenceId
-  // );
-  return await bank2.deposit(
-    details.targetAccount,
-    details.amount,
-    details.referenceId
-  );
-}
-// @@@SNIPEND
+import { Chunk, TransformedData } from "./shared";
 
-// @@@SNIPSTART money-transfer-project-template-ts-refund-activity
-export async function refund(details: PaymentDetails): Promise<string> {
-  console.log(
-    `Refunding $${details.amount} to account ${details.sourceAccount}.\n\n`
-  );
-  const bank1 = new BankingService('bank1.example.com');
-  return await bank1.deposit(
-    details.sourceAccount,
-    details.amount,
-    details.referenceId
-  );
+
+export const splitDateRange = (startDate: Date, endDate: Date): Chunk[] =>  {
+  let chunkId = 0;
+  const dateChunks = [];
+  let currentDate = new Date(startDate);
+
+  while (currentDate < endDate) {
+    const chunkStartDate = new Date(currentDate);
+
+    let chunkEndDate = new Date(currentDate);
+    chunkEndDate.setMonth(chunkEndDate.getMonth() + 1);
+
+
+    if (chunkEndDate > endDate) {
+      chunkEndDate = new Date(endDate);
+    }
+
+
+    dateChunks.push({
+      id: chunkId++,
+      chunkStartDate,
+      chunkEndDate,
+    });
+
+    currentDate = new Date(chunkEndDate);
+  }
+
+  return dateChunks;
 }
-// @@@SNIPEND
+
+export const fetchData = async (id: number, startDate: Date, endDate: Date): Promise<Record<string,any>[]> => {
+  console.log(`Fetching raw data for chunk: ${id}, startDate: ${startDate}, endDate: ${endDate}`);
+  // Fetch raw data
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  return [
+    { id: 1, amount: 100, someRawThings: { bam: 'blippityBlop' } },
+    { id: 2, amount: 200, someRawThings: { wam: 'bopbopbop' } },
+    { id: 3, amount: 300, someRawThings: { pam: 'achooooo' } },
+  ]
+}
+
+export const saveRawData = async (id: number, rawData: Record<string,any>[]): Promise<Record<string,any>[]> => {
+  console.log('Saving raw data for chunk:', id);
+  // Save raw data
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  return rawData;
+}
+
+export const transformData = async (id: number, rawData: Record<string,any>[]): Promise<TransformedData[]> => {
+  console.log('Transforming data for chunk:', id);
+  // Transform raw data
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  return rawData.map(({ id, amount }) => ({ id, amount }));
+}
+
+export const saveTransformedData = async (id: number, transformedData: TransformedData[]): Promise<void> => {
+  console.log('Saving transformed data for chunk:', id);
+  // Save transformed data
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+}

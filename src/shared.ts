@@ -9,8 +9,12 @@ export interface ImportDateSpan {
 
 
 export interface TransformedData {
-  transactions: {
-    id: string;
-    amount: number;
-  }[];
+  id: number;
+  amount: number;
+}
+
+export interface Chunk {
+  id: number;
+  chunkStartDate: Date;
+  chunkEndDate: Date;
 }

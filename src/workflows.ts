@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// @@@SNIPSTART money-transfer-project-template-ts-workflow
+
 import { proxyActivities } from '@temporalio/workflow';
 
 import type * as activities from './activities';
 import { ImportDateSpan } from './shared';
+import { splitDateRange } from './activities';
 
-const { fetchData, saveRawData, transformData, saveTransformedData, splitDateRange } = proxyActivities<typeof activities>({
+const { fetchData, saveRawData, transformData, saveTransformedData } = proxyActivities<typeof activities>({
   retry: {
     initialInterval: '1 second',
     maximumInterval: '1 minute',
@@ -20,20 +20,20 @@ const { fetchData, saveRawData, transformData, saveTransformedData, splitDateRan
 export async function importData(importDateSpan: ImportDateSpan): Promise<void> {
 
   const { startDate, endDate } = importDateSpan;
-  const dateChunks = await splitDateRange(startDate, endDate);
+  const dateChunks = splitDateRange(startDate, endDate);
   
-  const tasks = dateChunks.map(({ chunkId, chunkStartDate, chunkEndDate }) =>
+  const tasks = dateChunks.map(({ id, chunkStartDate, chunkEndDate }) =>
     (async () => {
-      await executeChunkWorkflow(chunkId, chunkStartDate, chunkEndDate);
+      await executeChunkWorkflow(id, chunkStartDate, chunkEndDate);
     })()
   );
 
   await Promise.all(tasks);
 }
 
-async function executeChunkWorkflow(chunkId: string, startDate: Date, endDate: Date): Promise<void> {
-  const fetchedRawData = await fetchData(chunkId, startDate, endDate);
-  const savedRawData = await saveRawData(chunkId, fetchedRawData);
-  const transformedData = await transformData(chunkId, savedRawData);
-  await saveTransformedData(chunkId, transformedData);
+async function executeChunkWorkflow(id: number, startDate: Date, endDate: Date): Promise<void> {
+  const fetchedRawData = await fetchData(id, startDate, endDate);
+  const savedRawData = await saveRawData(id, fetchedRawData);
+  const transformedData = await transformData(id, savedRawData);
+  await saveTransformedData(id, transformedData);
 }
